@@ -1,0 +1,50 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+  
+  - name: install_updates
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+
+- hosts: all
+  become: true
+  pre_tasks:
+  
+  - name: install_updates_second
+    tags: centos
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Centos"
+
+
+- hosts: all
+  become: true
+  tasks:
+  
+  - name: install apach and php
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+
+
+
+- hosts: all
+  become: true
+  tasks:
+  
+  - name: copy def file
+    copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
